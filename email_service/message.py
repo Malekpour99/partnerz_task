@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import List, Optional
+from typing import List, Dict, Optional, Any
 from dataclasses import dataclass
 
 
@@ -11,7 +11,10 @@ class EmailMessage:
     sender: str
     attachment_path: Optional[Path] = None
     attachment_name: Optional[str] = None
-    metadata: List[str] = None
+    metadata: Dict[str, Any] = None
 
     def __post_init__(self):
-        self.metadata = self.metadata or []
+        self.metadata = self.metadata or {}
+
+        if not isinstance(self.metadata, dict):
+            raise ValueError("Metadata must be a dictionary")
