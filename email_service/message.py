@@ -18,3 +18,16 @@ class EmailMessage:
 
         if not isinstance(self.metadata, dict):
             raise ValueError("Metadata must be a dictionary")
+
+    def get_sanitized_metadata_headers(self) -> Dict[str, str]:
+        """
+        Returns metadata as sanitized email headers.
+        Converts metadata to X-Metadata-* headers with sanitized values.
+        """
+        headers = {}
+        for key, value in self.metadata.items():
+            # Sanitize header key and value
+            header_key = f"X-Metadata-{key}".replace(" ", "-")
+            header_value = str(value).replace("\n", " ")
+            headers[header_key] = header_value
+        return headers

@@ -49,12 +49,12 @@ class SMTPProvider(EmailProvider):
             mime_message["To"] = email_message.recipients[0]
         else:
             mime_message["To"] = ", ".join(email_message.recipients)
-            
+
         # Add metadata as custom headers if present
-        for key, value in email_message.metadata.items():
-            # Sanitize header key and value
-            header_key = f'X-Metadata-{key}'.replace(' ', '-')
-            header_value = str(value).replace('\n', ' ')
+        for (
+            header_key,
+            header_value,
+        ) in email_message.get_sanitized_metadata_headers().items():
             mime_message[header_key] = header_value
 
         # Attach HTML content
