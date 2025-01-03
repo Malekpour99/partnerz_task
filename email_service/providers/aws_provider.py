@@ -16,7 +16,6 @@ class AWSEmailProvider(EmailProvider):
     def __init__(
         self, config: EmailConfig, ses_configuration_set: Optional[str] = None
     ):
-        super().__init__(config)
         self.ses_configuration_set = ses_configuration_set
         self._smtp_provider = SMTPProvider(config)
 
