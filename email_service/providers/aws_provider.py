@@ -55,7 +55,7 @@ class AWSEmailProvider(EmailProvider):
                 )
                 return
             except smtplib.SMTPResponseException as e:
-                # SMTP 454 - Authentication Issue
+                # SMTP 454 - Temporary Authentication Issue
                 if e.smtp_code == 454 and retries < self._smtp_provider._max_retries:
                     retries += 1
                     sleep(self._smtp_provider._retry_delay)
