@@ -40,7 +40,7 @@ class SMTPProvider(EmailProvider):
                 self._connection = None
 
     def _create_mime_message(self, email_message: EmailMessage) -> MIMEMultipart:
-        """Create MIME message with all components"""
+        """Create MIME message with all of its components"""
         mime_message = MIMEMultipart()
         mime_message['Subject'] = Header(email_message.subject, 'utf-8')
         mime_message['From'] = email_message.sender
@@ -75,6 +75,9 @@ class SMTPProvider(EmailProvider):
         if not self._connection:
             self.connect()
 
+        if not message.recipients:
+            raise EmailError("No recipients specified")
+
         mime_message = self._create_mime_message(message)
         
         retries = 0
@@ -87,6 +90,7 @@ class SMTPProvider(EmailProvider):
                 )
                 return
             except smtplib.SMTPResponseException as e:
+                # SMTP 454 - Authentication Issue
                 if e.smtp_code == 454 and retries < self._max_retries:
                     retries += 1
                     sleep(self._retry_delay)
