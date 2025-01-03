@@ -44,7 +44,10 @@ class SMTPProvider(EmailProvider):
         mime_message = MIMEMultipart()
         mime_message['Subject'] = Header(email_message.subject, 'utf-8')
         mime_message['From'] = email_message.sender
-        mime_message['To'] = email_message.recipients[0]  # We'll handle multiple recipients in send()
+        if len(email_message.recipients) == 1:
+            mime_message['To'] = email_message.recipients[0]
+        else:
+            mime_message['To'] = ', '.join(email_message.recipients)
 
         # Attach HTML content
         html_part = MIMEText(email_message.html_content.encode('utf-8'), 'html', 'utf-8')
